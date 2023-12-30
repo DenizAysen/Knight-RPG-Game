@@ -93,14 +93,14 @@ public class PlayerOnClick : MonoBehaviour
             _anim.SetFloat("Speed", 1f);
 
             _newMovePoint = new Vector3(_targetMovePoint.x, transform.position.y, _targetMovePoint.z);
-            Vector3 moveDir = (_newMovePoint - transform.position).normalized;
+            //Vector3 moveDir = (_newMovePoint - transform.position).normalized;
 
-            transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
-            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newMovePoint - transform.position), rotateSpeed*Time.deltaTime);
+            //transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newMovePoint - transform.position), rotateSpeed*Time.deltaTime);
 
             _moveVector = transform.forward * _currentSpeed * Time.deltaTime;
 
-            if (Vector3.Distance(transform.position, _newMovePoint) <= .6f)
+            if (Vector3.Distance(transform.position, _newMovePoint) <= .2f)
             {
                 _canMove = false;
             }
