@@ -128,6 +128,49 @@ public class PlayerOnClick : MonoBehaviour
             _moveVector.y = _height * Time.deltaTime;
             _collisionFlags = _controller.Move(_moveVector);
         }
+    }
+    #endregion
+
+    #region Properties
+    public bool FinishedMovement
+    {
+        get
+        {
+            return _finishedMovement;
+        }
+        set
+        {
+            _finishedMovement = value;
+        }
+    }
+    public bool CanMove
+    {
+        get
+        {
+            return _canMove;
+        }
+        set
+        {
+            _canMove = value;
+        }
+    }
+    public Vector3 TargetPosition
+    {
+        get
+        {
+            return _targetMovePoint;
+        }
+        set
+        {
+            _targetMovePoint = value;
+        }
+    }
+    public float RotateSpeed
+    {
+        get
+        {
+            return rotateSpeed;
+        }
     } 
     #endregion
 }
