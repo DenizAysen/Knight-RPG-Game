@@ -183,7 +183,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e7e323f9c358537409e0612751397e06, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f9ec7d9c694292a4389983f41fa52795, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 4445584517592394}
-  m_Follow: {fileID: 4445584517592394}
+  m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
@@ -419,8 +419,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115523613}
-  m_LocalRotation: {x: 0.38268343, y: 0.000000015896623, z: -0.000000006584596, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 6, z: -6}
+  m_LocalRotation: {x: 0.40683857, y: 0.000000022228644, z: -0.000000009899801, w: 0.9135001}
+  m_LocalPosition: {x: 0, y: 5, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -818,10 +818,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 6, z: -6}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_FollowOffset: {x: 0, y: 5, z: -4.5}
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_AngularDampingMode: 0
   m_PitchDamping: 0
   m_YawDamping: 0
@@ -3142,8 +3142,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988256627}
-  m_LocalRotation: {x: 0.38268343, y: 0.000000015896623, z: -0.000000006584596, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 6, z: -6}
+  m_LocalRotation: {x: 0.40683857, y: 0.000000022228644, z: -0.000000009899801, w: 0.9135001}
+  m_LocalPosition: {x: 0, y: 5, z: -4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4350,12 +4350,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1501144623}
   m_CullTransparentMesh: 1
---- !u!1 &1636063388 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1139757629358677577, guid: 304cf5d0f52e46746b08b78e35c8434d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1141598097719533651}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1641176953
 GameObject:
   m_ObjectHideFlags: 0
@@ -4978,39 +4972,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1141598097719533651}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4445584517592399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1636063388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ac672c8cd1ddce47bb65ac2e6251a43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cooldownIcons:
-  - {fileID: 170276462}
-  - {fileID: 1854984264}
-  - {fileID: 1828239897}
-  - {fileID: 1501144625}
-  - {fileID: 1274478668}
-  - {fileID: 570158494}
-  outOfManaIcons:
-  - {fileID: 223022715}
-  - {fileID: 1192354483}
-  - {fileID: 2015638500}
-  - {fileID: 721356396}
-  - {fileID: 891194490}
-  - {fileID: 183060573}
-  cooldownTimersList:
-  - 1
-  - 0.5
-  - 0.8
-  - 0.6
-  - 2
-  - 0.3
 --- !u!1001 &1141598097719533651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5018,6 +4979,66 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: manaBar
+      value: 
+      objectReference: {fileID: 952438189}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: virtualCamera
+      value: 
+      objectReference: {fileID: 115523614}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: manaCostList.Array.data[0]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: cooldownIcons.Array.data[0]
+      value: 
+      objectReference: {fileID: 170276462}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: cooldownIcons.Array.data[1]
+      value: 
+      objectReference: {fileID: 1854984264}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: cooldownIcons.Array.data[2]
+      value: 
+      objectReference: {fileID: 1828239897}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: cooldownIcons.Array.data[3]
+      value: 
+      objectReference: {fileID: 1501144625}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: cooldownIcons.Array.data[4]
+      value: 
+      objectReference: {fileID: 1274478668}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: cooldownIcons.Array.data[5]
+      value: 
+      objectReference: {fileID: 570158494}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: outOfManaIcons.Array.data[0]
+      value: 
+      objectReference: {fileID: 223022715}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: outOfManaIcons.Array.data[1]
+      value: 
+      objectReference: {fileID: 1192354483}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: outOfManaIcons.Array.data[2]
+      value: 
+      objectReference: {fileID: 2015638500}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: outOfManaIcons.Array.data[3]
+      value: 
+      objectReference: {fileID: 721356396}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: outOfManaIcons.Array.data[4]
+      value: 
+      objectReference: {fileID: 891194490}
+    - target: {fileID: 4445584517592399, guid: 304cf5d0f52e46746b08b78e35c8434d, type: 3}
+      propertyPath: outOfManaIcons.Array.data[5]
+      value: 
+      objectReference: {fileID: 183060573}
     - target: {fileID: 1139757629358677577, guid: 304cf5d0f52e46746b08b78e35c8434d,
         type: 3}
       propertyPath: m_Name
