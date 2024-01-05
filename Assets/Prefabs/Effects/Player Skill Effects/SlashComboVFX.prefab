@@ -9676,6 +9676,7 @@ GameObject:
   - component: {fileID: 7972625377585148678}
   - component: {fileID: 7972625377599305284}
   - component: {fileID: 7972625377599393764}
+  - component: {fileID: 7134097748476431271}
   m_Layer: 0
   m_Name: SlashComboVFX
   m_TagString: Untagged
@@ -14490,3 +14491,20 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7134097748476431271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7972625377585377062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ddef3360a36f04caa257602eb2bff6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  radius: 1
+  damageAmount: 10
