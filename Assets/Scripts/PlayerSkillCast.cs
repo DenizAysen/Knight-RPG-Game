@@ -14,11 +14,6 @@ public class PlayerSkillCast : MonoBehaviour
     [Header("Out of Mana Icons")]
     [SerializeField] private Image[] outOfManaIcons;
 
-    [Header("Mana Settings")]
-    [SerializeField] private float totalMana = 100f;
-    [SerializeField] private float manaRegenSpeed = 2f;
-    [SerializeField] private Image manaBar;
-
     [SerializeField] private List<float> manaCostList;
     [SerializeField] private List<float> cooldownTimersList;
 
@@ -34,6 +29,7 @@ public class PlayerSkillCast : MonoBehaviour
     private Animator _anim;
 
     private PlayerOnClick _playerOnClick;
+    private PlayerManaController manaController;
     private PlayerInput playerInput;
     #endregion
     private void Awake()
@@ -43,6 +39,7 @@ public class PlayerSkillCast : MonoBehaviour
         _fadeImages = new int[] { 0, 0, 0, 0, 0, 0 };
         _anim = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
+        manaController = GetComponent<PlayerManaController>();
     }
     void Start()
     {
@@ -58,14 +55,13 @@ public class PlayerSkillCast : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(!_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
             _canAttack = true;
-            if (virtualCamera.m_Follow != transform)
-                virtualCamera.m_Follow = transform;
+            //if (virtualCamera.m_Follow != transform)
+            //    virtualCamera.m_Follow = transform;
         }
         else
         {
@@ -77,7 +73,6 @@ public class PlayerSkillCast : MonoBehaviour
         }
 
         CheckMana();
-        RegenerateMana();
         CheckToFade();
         CheckInput();
         CastSkill();
@@ -104,21 +99,13 @@ public class PlayerSkillCast : MonoBehaviour
     {
         for (int i = 0; i < manaCostList.Count; i++)
         {
-            if(totalMana < manaCostList[i])
+            if(!manaController.CanCastSkill(manaCostList[i]))
             {
                 outOfManaIcons[i].gameObject.SetActive(true);
             }
             else
                 outOfManaIcons[i].gameObject.SetActive(false);
         }
-    }
-    private void RegenerateMana()
-    {
-        if (!(totalMana < 100f))
-            return;
-
-        totalMana += Time.deltaTime * manaRegenSpeed;
-        manaBar.fillAmount = (totalMana / 100f);
     }
     private bool FadeAndWait(Image fadeImage, float fadeTime)
     {
@@ -155,19 +142,19 @@ public class PlayerSkillCast : MonoBehaviour
                 _playerOnClick.FinishedMovement = false;
             }
         }
-        if(_castedSkillIndex < 0)
+        if (_castedSkillIndex < 0)
         {
             _anim.SetInteger("Attack", 0);
         }
         else
         {
-            if (totalMana >= manaCostList[_castedSkillIndex])
+            if (manaController.CanCastSkill(manaCostList[_castedSkillIndex]))
             {
                 _playerOnClick.TargetPosition = transform.position;
                 if (_playerOnClick.FinishedMovement && _fadeImages[_castedSkillIndex] != 1 && _canAttack)
                 {
                     _fadeImages[_castedSkillIndex] = 1;
-                    totalMana -= manaCostList[_castedSkillIndex];
+                    manaController.SpendMana(manaCostList[_castedSkillIndex]);
                     _anim.SetInteger("Attack", _castedSkillIndex+1);
                 }
             }
