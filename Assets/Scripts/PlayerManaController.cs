@@ -5,9 +5,11 @@ using UnityEngine.UI;
 
 public class PlayerManaController : MonoBehaviour
 {
+    #region SerializedFields
     [SerializeField] private float totalMana = 100f;
     [SerializeField] private float manaRegenSpeed = 2f;
-    [SerializeField] private Image manaBar;
+    [SerializeField] private Image manaBar; 
+    #endregion
     private void Update()
     {
         RegenerateManaBar();
