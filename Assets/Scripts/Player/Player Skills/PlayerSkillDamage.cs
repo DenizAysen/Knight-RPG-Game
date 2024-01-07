@@ -9,9 +9,9 @@ public class PlayerSkillDamage : MonoBehaviour
     [SerializeField] private float damageAmount = 10f;
 
     private EnemyHealth _enemyHealth;
-    private bool _collided;
+    protected bool _collided;
     Collider[] _hits;
-    void Update()
+    internal virtual void Update()
     {
         _hits = Physics.OverlapSphere(transform.position, radius, enemyLayer);
 

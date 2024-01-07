@@ -14507,4 +14507,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   radius: 1
-  damageAmount: 10
+  damageAmount: 30

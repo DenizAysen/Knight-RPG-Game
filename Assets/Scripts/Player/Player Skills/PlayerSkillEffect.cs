@@ -12,7 +12,9 @@ public class PlayerSkillEffect : MonoBehaviour
     }
     private void SpellCastEffect()
     {
-        Instantiate(skillEffects[1].SkillParticle, skillEffects[1].SkillSpawnPos.position, Quaternion.identity);
+        GameObject spellGMO = Instantiate(skillEffects[1].SkillParticle, skillEffects[1].SkillSpawnPos.position, Quaternion.identity);
+        Spell spell = spellGMO.GetComponent<Spell>();
+        spell?.Init(transform.forward);
     }
     private void KickSkillEffect()
     {
@@ -20,11 +22,13 @@ public class PlayerSkillEffect : MonoBehaviour
     }
     private void ShieldSpellEffect()
     {
-        Instantiate(skillEffects[3].SkillParticle, transform.position, Quaternion.identity);
+        GameObject shieldGMO = Instantiate(skillEffects[3].SkillParticle, transform.position, Quaternion.identity);
+        shieldGMO.transform.SetParent(transform);
     }
     private void HealSpellEffect()
     {
-        Instantiate(skillEffects[4].SkillParticle, transform.position, Quaternion.identity);
+        GameObject healGMO = Instantiate(skillEffects[4].SkillParticle, transform.position, Quaternion.identity);
+        healGMO.transform.SetParent(transform);
     }
     private void SlashComboEffect()
     {

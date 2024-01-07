@@ -272,9 +272,10 @@ GameObject:
   - component: {fileID: 4445584517592400}
   - component: {fileID: 1141598097719533653}
   - component: {fileID: 6603617466863670866}
-  m_Layer: 0
+  - component: {fileID: 6238352429795677969}
+  m_Layer: 11
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -400,7 +401,7 @@ MonoBehaviour:
   - {fileID: 0}
   manaCostList:
   - 20
-  - 60
+  - 30
   - 80
   - 20
   - 20
@@ -474,8 +475,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalMana: 100
-  manaRegenSpeed: 2
+  manaRegenSpeed: 100
   manaBar: {fileID: 0}
+--- !u!114 &6238352429795677969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139757629358677577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e09186a0705f9a443972acba54f83d53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  healthBar: {fileID: 0}
 --- !u!1 &1139764987980396959
 GameObject:
   m_ObjectHideFlags: 0

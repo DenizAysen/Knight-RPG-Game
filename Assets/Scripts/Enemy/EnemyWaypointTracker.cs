@@ -18,8 +18,8 @@ public class EnemyWaypointTracker : MonoBehaviour
 
     #region Privates
     private Transform playerTransform;
-    private Animator _anim;
     private NavMeshAgent _agent;
+    private EnemyAnimationController animationController;
 
     private float _currentAttackTime;
     private Vector3 _nextDestination;
@@ -28,9 +28,10 @@ public class EnemyWaypointTracker : MonoBehaviour
     private void Awake()
     {
         playerTransform = GameObject.Find("Player").transform;
-        _anim = GetComponent<Animator>();
+        animationController = GetComponent<EnemyAnimationController>();
         _agent = GetComponent<NavMeshAgent>();
         _waypointIndex = Random.Range(0,wayPoints.Length);
+
         if(wayPoints.Length > 0)
             InvokeRepeating("Patrol", Random.Range(0, patrolTime), patrolTime);
     }
@@ -38,8 +39,6 @@ public class EnemyWaypointTracker : MonoBehaviour
     {
         _agent.avoidancePriority = Random.Range(0, 51);   
     }
-
-    // Update is called once per frame
     void Update()
     {
         MoveAndAttack();
@@ -51,14 +50,14 @@ public class EnemyWaypointTracker : MonoBehaviour
         {
             if(_agent.remainingDistance >= _agent.stoppingDistance)
             {
-                StartMoveAnimation(2f);
+                MoveAgent(2f);
 
                 _nextDestination = wayPoints[_waypointIndex].position;
                 _agent.SetDestination(_nextDestination);
             }
             else
             {
-                StopWalkAnimation();
+                StopAgent();
 
                 _nextDestination = wayPoints[_waypointIndex].position;
                 _agent.SetDestination(_nextDestination);
@@ -66,33 +65,37 @@ public class EnemyWaypointTracker : MonoBehaviour
         }
         else
         {
-            if (distance > attackDistance + .15f && !IsAttacking())
+            if (distance > attackDistance + .15f  && !playerTransform.GetComponent<PlayerHealth>().IsPlayerDead())
             {
-                StartMoveAnimation(3f);
-                _anim.ResetTrigger("Attack");
-                _agent.SetDestination(playerTransform.position);
+                if (animationController.IsEnemyNotInAttackAnimation())
+                {
+                    MoveAgent(3f);
+                    animationController.ResetAttackAnimation();
+                    _agent.SetDestination(playerTransform.position);
+                }
+                
             }
-            else if(distance <= attackDistance)
+            else if(distance <= attackDistance && !playerTransform.GetComponent<PlayerHealth>().IsPlayerDead())
             {
                 AttackPlayer();
             }
         }
     }
-    private void StartMoveAnimation(float agentSpeed)
+    private void MoveAgent(float agentSpeed)
     {
         _agent.isStopped = false;
         _agent.speed = agentSpeed;
-        _anim.SetBool("Walk", true);
+        animationController.PlayWalkAnimation();
     }
-    private void StopWalkAnimation()
+    private void StopAgent()
     {
         _agent.isStopped = true;
         _agent.speed = 0f;
-        _anim.SetBool("Walk", false);
+        animationController.StopWalkAnimation();
     }
     private void AttackPlayer()
     {
-        StopWalkAnimation();
+        StopAgent();
 
         Vector3 targetPosition = new Vector3(playerTransform.position.x, transform.position.y,
             playerTransform.position.z);
@@ -100,7 +103,7 @@ public class EnemyWaypointTracker : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), rotateSpeed * Time.deltaTime);
         if (_currentAttackTime >= attackRate)
         {
-            _anim.SetTrigger("Attack");
+            animationController.PlayAttackAnimation();
             _currentAttackTime = 0;
         }
         else
@@ -111,9 +114,5 @@ public class EnemyWaypointTracker : MonoBehaviour
     private void Patrol()
     {
         _waypointIndex = _waypointIndex == wayPoints.Length - 1 ? 0 : _waypointIndex + 1; 
-    }
-    private bool IsAttacking()
-    {
-        return _anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Attack");
     }
 }
