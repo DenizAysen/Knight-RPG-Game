@@ -43,6 +43,11 @@ public class EnemyAnimationController : MonoBehaviour
     public void PlayDeathAnimation()
     {
         _anim.SetBool("Death", true);
-    } 
+    }
+    public bool DeathAnimationCompleted() => !_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Death") && 
+        _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > .95f;
     #endregion
+    //public bool AnimatorIsInTransition() => _anim.IsInTransition(0);
+    //public bool AnimatorIsInDeathState() => _anim.GetCurrentAnimatorStateInfo(0).IsName("Death");
+    //public bool IsAnimatorCurrentStateCompleted() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > .95f;
 }

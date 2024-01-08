@@ -9,7 +9,6 @@ public class EnemyAttack : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         _playerHealth = other.GetComponent<PlayerHealth>();
-        Debug.Log(other.gameObject.name);
         _playerHealth?.TakeDamage(attackDamage);
     }
 }

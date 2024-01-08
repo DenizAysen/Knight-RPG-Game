@@ -7,6 +7,7 @@ public class PlayerOnClick : MonoBehaviour
     #region Serialized Fields
     [SerializeField] private float maxMoveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 15f;
+    [SerializeField] private float attackRange = 2f;
 
     [SerializeField] private LayerMask groundlayer;
     #endregion
@@ -19,6 +20,8 @@ public class PlayerOnClick : MonoBehaviour
     private Vector3 _moveVector;
     private Vector3 _newMovePoint;
     private Vector3 _targetMovePoint;
+    private Vector3 _targetAttackPoint;
+    private Vector3 _newAttackPoint;
 
     private float _currentSpeed;
     private float _playerToPointDistance;
@@ -27,7 +30,10 @@ public class PlayerOnClick : MonoBehaviour
     private float _animationExitTime;
 
     private bool _canMove;
+    private bool _canAttackMove;
     private bool _finishedMovement = true;
+
+    private GameObject _enemy;
     #endregion
 
     #region Unity Methods
@@ -42,6 +48,7 @@ public class PlayerOnClick : MonoBehaviour
         _collisionFlags = CollisionFlags.None;
         _moveVector = Vector3.zero;
         _targetMovePoint = Vector3.zero;
+        _targetAttackPoint = Vector3.zero;
         _gravity = 9.8f;
         _animationExitTime = .8f;
     }
@@ -50,6 +57,7 @@ public class PlayerOnClick : MonoBehaviour
     {
         CalculateHeight();
         CheckIfFinishedMovement();
+        AttackMove();
     }
     #endregion
 
@@ -82,9 +90,17 @@ public class PlayerOnClick : MonoBehaviour
                     if (_playerToPointDistance > 1f)
                     {
                         _canMove = true;
+                        _canAttackMove = false;
                         _targetMovePoint = hit.point;
                     }
                 }
+                else if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Target"))
+                {
+                    _enemy = hit.collider.gameObject.transform.parent.gameObject;
+                    _canMove = true;
+                    _canAttackMove = true;
+                }
+  
             }
         }
 
@@ -92,17 +108,38 @@ public class PlayerOnClick : MonoBehaviour
         {
             _anim.SetFloat("Speed", 1f);
 
-            _newMovePoint = new Vector3(_targetMovePoint.x, transform.position.y, _targetMovePoint.z);
-            //Vector3 moveDir = (_newMovePoint - transform.position).normalized;
+            if (!_canAttackMove)
+            {
+                _newMovePoint = new Vector3(_targetMovePoint.x, transform.position.y, _targetMovePoint.z);
+                //Vector3 moveDir = (_newMovePoint - transform.position).normalized;
 
-            //transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newMovePoint - transform.position), rotateSpeed*Time.deltaTime);
+                //transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newMovePoint - transform.position), rotateSpeed * Time.deltaTime);
+            }
+
+            else
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newAttackPoint - transform.position), rotateSpeed * Time.deltaTime);
+            }
 
             _moveVector = transform.forward * _currentSpeed * Time.deltaTime;
 
-            if (Vector3.Distance(transform.position, _newMovePoint) <= .2f)
+            if (Vector3.Distance(transform.position, _newMovePoint) <= .2f && !_canAttackMove)
             {
                 _canMove = false;
+                _canAttackMove = false;
+            }
+            else if (_canAttackMove)
+            {
+                if(Vector3.Distance(transform.position, _newAttackPoint) <= attackRange)
+                {
+                    _moveVector = Vector3.zero;
+                    _anim.SetFloat("Speed", 0f);
+                    _targetAttackPoint = Vector3.zero;
+                    _anim.SetTrigger("AttackMove");
+                    _canAttackMove = false;
+                    _canMove = false;
+                }
             }
         }
 
@@ -110,6 +147,19 @@ public class PlayerOnClick : MonoBehaviour
         {
             _moveVector = Vector3.zero;
             _anim.SetFloat("Speed", 0f);
+        }
+    }
+    private void AttackMove()
+    {
+        if (_canAttackMove)
+        {
+            _targetAttackPoint = _enemy.gameObject.transform.position;
+
+            _newAttackPoint = new Vector3(_targetAttackPoint.x, transform.position.y, _targetAttackPoint.z);           
+        }
+        if (!_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Basic Attack"))
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newAttackPoint - transform.position), rotateSpeed * Time.deltaTime);
         }
     }
     private void CheckIfFinishedMovement()

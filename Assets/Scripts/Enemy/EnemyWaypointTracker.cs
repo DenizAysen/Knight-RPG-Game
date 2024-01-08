@@ -20,6 +20,7 @@ public class EnemyWaypointTracker : MonoBehaviour
     private Transform playerTransform;
     private NavMeshAgent _agent;
     private EnemyAnimationController animationController;
+    private EnemyHealth _enemyHealth;
 
     private float _currentAttackTime;
     private Vector3 _nextDestination;
@@ -31,6 +32,7 @@ public class EnemyWaypointTracker : MonoBehaviour
         animationController = GetComponent<EnemyAnimationController>();
         _agent = GetComponent<NavMeshAgent>();
         _waypointIndex = Random.Range(0,wayPoints.Length);
+        _enemyHealth = GetComponent<EnemyHealth>();
 
         if(wayPoints.Length > 0)
             InvokeRepeating("Patrol", Random.Range(0, patrolTime), patrolTime);
@@ -41,7 +43,15 @@ public class EnemyWaypointTracker : MonoBehaviour
     }
     void Update()
     {
-        MoveAndAttack();
+        if(_enemyHealth.IsEnemyAlive())
+            MoveAndAttack();
+        else
+        {
+            animationController.PlayDeathAnimation();
+            _agent.enabled = false;
+            if (animationController.DeathAnimationCompleted())
+                Destroy(gameObject, 5f);
+        }
     }
     private void MoveAndAttack()
     {
