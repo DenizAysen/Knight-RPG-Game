@@ -22,13 +22,6 @@ public class PlayerHealth : MonoBehaviour
         _currentHealth = maxHealth;
         _anim = GetComponent<Animator>();
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(30);
-        }
-    } 
     #endregion
     #region Methods
     public void TakeDamage(float damageAmount)

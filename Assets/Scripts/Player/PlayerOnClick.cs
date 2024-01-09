@@ -13,8 +13,8 @@ public class PlayerOnClick : MonoBehaviour
     #endregion
 
     #region Privates
-    private Animator _anim;
     private CharacterController _controller;
+    private PlayerAnimationController _animationController;
     private CollisionFlags _collisionFlags;
 
     private Vector3 _moveVector;
@@ -27,7 +27,6 @@ public class PlayerOnClick : MonoBehaviour
     private float _playerToPointDistance;
     private float _gravity;
     private float _height;
-    private float _animationExitTime;
 
     private bool _canMove;
     private bool _canAttackMove;
@@ -39,8 +38,8 @@ public class PlayerOnClick : MonoBehaviour
     #region Unity Methods
     private void Awake()
     {
-        _anim = GetComponent<Animator>();
         _controller = GetComponent<CharacterController>();
+        _animationController = GetComponent<PlayerAnimationController>();
         _currentSpeed = maxMoveSpeed;
     }
     void Start()
@@ -50,7 +49,6 @@ public class PlayerOnClick : MonoBehaviour
         _targetMovePoint = Vector3.zero;
         _targetAttackPoint = Vector3.zero;
         _gravity = 9.8f;
-        _animationExitTime = .8f;
     }
 
     void Update()
@@ -106,7 +104,7 @@ public class PlayerOnClick : MonoBehaviour
 
         if (_canMove)
         {
-            _anim.SetFloat("Speed", 1f);
+            _animationController.PlayRunAnimation();
 
             if (!_canAttackMove)
             {
@@ -134,9 +132,9 @@ public class PlayerOnClick : MonoBehaviour
                 if(Vector3.Distance(transform.position, _newAttackPoint) <= attackRange)
                 {
                     _moveVector = Vector3.zero;
-                    _anim.SetFloat("Speed", 0f);
+                    _animationController.StopRunAnimation();
                     _targetAttackPoint = Vector3.zero;
-                    _anim.SetTrigger("AttackMove");
+                    _animationController.PlayBasicAttackAnimation();
                     _canAttackMove = false;
                     _canMove = false;
                 }
@@ -146,7 +144,7 @@ public class PlayerOnClick : MonoBehaviour
         else
         {
             _moveVector = Vector3.zero;
-            _anim.SetFloat("Speed", 0f);
+            _animationController.StopRunAnimation();
         }
     }
     private void AttackMove()
@@ -157,17 +155,16 @@ public class PlayerOnClick : MonoBehaviour
 
             _newAttackPoint = new Vector3(_targetAttackPoint.x, transform.position.y, _targetAttackPoint.z);           
         }
-        if (!_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Basic Attack"))
+        if (_animationController.IsPlayingBasicAttackAnimation())
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newAttackPoint - transform.position), rotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_newAttackPoint - transform.position), rotateSpeed * 2 * Time.deltaTime);
         }
     }
     private void CheckIfFinishedMovement()
     {
         if (!_finishedMovement)
         {
-            if (!_anim.IsInTransition(0) && !_anim.GetCurrentAnimatorStateInfo(0).IsName("Idle")
-                && _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= _animationExitTime)
+            if (_animationController.IsPlayingAnimationFinished())
             {
                 _finishedMovement = true;
             }

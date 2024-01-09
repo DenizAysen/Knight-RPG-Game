@@ -17,6 +17,9 @@ public class PlayerSkillCast : MonoBehaviour
     [SerializeField] private List<float> manaCostList;
     [SerializeField] private List<float> cooldownTimersList;
 
+    [Header("Required Level")]
+    [SerializeField] private List<int> requiredLevelList;
+
     [SerializeField] private CinemachineVirtualCamera virtualCamera;
     #endregion
     #region Privates
@@ -26,20 +29,22 @@ public class PlayerSkillCast : MonoBehaviour
     private int[] _fadeImages;
     private FrameInput _frameInput;
 
-    private Animator _anim;
-
+    private PlayerAnimationController _animationController;
     private PlayerOnClick _playerOnClick;
     private PlayerManaController manaController;
     private PlayerInput playerInput;
+
+    private LevelManager _levelManager;
     #endregion
     private void Awake()
     {
         _playerOnClick = GetComponent<PlayerOnClick>();
         _canAttack = true;
         _fadeImages = new int[] { 0, 0, 0, 0, 0, 0 };
-        _anim = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         manaController = GetComponent<PlayerManaController>();
+        _animationController = GetComponent<PlayerAnimationController>();
+        _levelManager = FindObjectOfType<LevelManager>();
     }
     void Start()
     {
@@ -57,7 +62,7 @@ public class PlayerSkillCast : MonoBehaviour
 
     void Update()
     {
-        if(!_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        if(!_animationController.IsAnimatorInTransition() && _animationController.IsPlayingIdleAnimation())
         {
             _canAttack = true;
             //if (virtualCamera.m_Follow != transform)
@@ -66,12 +71,13 @@ public class PlayerSkillCast : MonoBehaviour
         else
         {
             _canAttack = false;
-        }
-        if (_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        }       
+
+        if (_animationController.IsAnimatorInTransition() && _animationController.IsPlayingIdleAnimation() && _castedSkillIndex > -1)
         {
             TurnThePlayer();
         }
-
+        CheckLevel();
         CheckMana();
         CheckToFade();
         CheckInput();
@@ -97,12 +103,26 @@ public class PlayerSkillCast : MonoBehaviour
     }
     private void CheckMana()
     {
+        
         for (int i = 0; i < manaCostList.Count; i++)
         {
-            if(!manaController.CanCastSkill(manaCostList[i]))
+            if(_levelManager.GetLevel>= requiredLevelList[i])
             {
+                if (!manaController.CanCastSkill(manaCostList[i]))
+                    outOfManaIcons[i].gameObject.SetActive(true);
+
+                else
+                    outOfManaIcons[i].gameObject.SetActive(false);
+            }         
+        }
+    }
+    private void CheckLevel()
+    {
+        for (int i = 0; i < outOfManaIcons.Length; i++)
+        {
+            if (_levelManager.GetLevel < requiredLevelList[i])
                 outOfManaIcons[i].gameObject.SetActive(true);
-            }
+
             else
                 outOfManaIcons[i].gameObject.SetActive(false);
         }
@@ -131,9 +151,9 @@ public class PlayerSkillCast : MonoBehaviour
     }
     private void CastSkill()
     {
-        if (_anim.GetInteger("Attack") == 0)
+        if (_animationController.GetPlayingSkillAnimationIndex() == 0)
         {
-            if (!_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            if (!_animationController.IsAnimatorInTransition() && _animationController.IsPlayingIdleAnimation())
             {
                 _playerOnClick.FinishedMovement = true;
             }
@@ -144,18 +164,20 @@ public class PlayerSkillCast : MonoBehaviour
         }
         if (_castedSkillIndex < 0)
         {
-            _anim.SetInteger("Attack", 0);
+            if (_animationController.GetPlayingSkillAnimationIndex() != 0)
+                _animationController.PlayCastedSkillAnimation(0);
+            return;
         }
         else
         {
-            if (manaController.CanCastSkill(manaCostList[_castedSkillIndex]))
+            if (manaController.CanCastSkill(manaCostList[_castedSkillIndex]) && _levelManager.GetLevel >= requiredLevelList[_castedSkillIndex])
             {
                 _playerOnClick.TargetPosition = transform.position;
                 if (_playerOnClick.FinishedMovement && _fadeImages[_castedSkillIndex] != 1 && _canAttack)
                 {
                     _fadeImages[_castedSkillIndex] = 1;
                     manaController.SpendMana(manaCostList[_castedSkillIndex]);
-                    _anim.SetInteger("Attack", _castedSkillIndex+1);
+                    _animationController.PlayCastedSkillAnimation(_castedSkillIndex + 1);
                 }
             }
         }
@@ -236,6 +258,6 @@ public class PlayerSkillCast : MonoBehaviour
             targetPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
         }
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPos - transform.position),
-            _playerOnClick.RotateSpeed * Time.deltaTime);
+            _playerOnClick.RotateSpeed * 100 * Time.deltaTime);
     }
 }
