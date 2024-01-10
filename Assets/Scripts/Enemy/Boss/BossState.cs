@@ -38,7 +38,7 @@ public class BossState : MonoBehaviour
             {
                 _bossState = BossStates.None;
             }
-            else if(enemyCount < 0)
+            else if(enemyCount == 0)
             {
                 _bossState = BossStates.None;
             }
@@ -72,6 +72,7 @@ public class BossState : MonoBehaviour
         }
         if(_enemyHealth.GetCurrentHealth() <= 0f)
         {
+            Debug.Log(_enemyHealth.GetCurrentHealth());
             _bossState = BossStates.Death;
         }
     }

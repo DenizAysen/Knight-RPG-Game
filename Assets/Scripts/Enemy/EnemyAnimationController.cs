@@ -10,17 +10,17 @@ public class EnemyAnimationController : MonoBehaviour
         _anim = GetComponent<Animator>();
     }
     #region Hit Animation
-    public void PlayHitAnimation()
+    internal virtual void PlayHitAnimation()
     {
         _anim.SetTrigger("Hit");
     } 
     #endregion
     #region Walk Animation Methods
-    public void PlayWalkAnimation()
+    internal virtual void PlayWalkAnimation()
     {
         _anim.SetBool("Walk", true);
     }
-    public void StopWalkAnimation()
+    internal virtual void StopWalkAnimation()
     {
         _anim.SetBool("Walk", false);
     }
@@ -40,7 +40,7 @@ public class EnemyAnimationController : MonoBehaviour
     }
     #endregion
     #region Death Animation
-    public void PlayDeathAnimation()
+    internal virtual void PlayDeathAnimation()
     {
         _anim.SetBool("Death", true);
     }

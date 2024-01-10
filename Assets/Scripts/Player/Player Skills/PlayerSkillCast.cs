@@ -249,7 +249,7 @@ public class PlayerSkillCast : MonoBehaviour
     private void TurnThePlayer()
     {
         Vector3 targetPos = Vector3.zero;
-        virtualCamera.m_Follow = null;
+        //virtualCamera.m_Follow = null;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 

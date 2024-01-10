@@ -17,6 +17,7 @@ public class Spell : PlayerSkillDamage
         transform.Translate(Vector3.forward * (Time.deltaTime * spellMoveSpeed));
         if (_collided)
         {
+           // Debug.Log(hittedGMO.name);
             Instantiate(explosionVFX,transform.position,Quaternion.identity);
             Destroy(gameObject);
         }

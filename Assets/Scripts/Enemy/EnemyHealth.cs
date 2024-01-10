@@ -21,7 +21,9 @@ public class EnemyHealth : MonoBehaviour
     private void Awake()
     {
         _currentHealth = maxHealth;
+        Debug.Log(gameObject.name + " health : " + _currentHealth);
         animationController = GetComponent<EnemyAnimationController>();
+        Debug.Log(animationController.gameObject.name);
     }
     public void TakeDamage(float damageAmount)
     {
@@ -32,13 +34,15 @@ public class EnemyHealth : MonoBehaviour
         healthBar.fillAmount = _currentHealth / maxHealth;
 
         if (_currentHealth > 0)
-            animationController.PlayHitAnimation();
+            animationController?.PlayHitAnimation();
 
         else
         {
             Canvas canvas = healthBar.gameObject.GetComponentInParent<Canvas>();
             OnDeath?.Invoke(expAmount);
-            canvas?.gameObject.SetActive(false);
+            if(canvas != null && canvas.renderMode == RenderMode.WorldSpace)
+                canvas.gameObject.SetActive(false);
+
             targetCollider?.gameObject.SetActive(false);
         }
         Debug.Log("Enemy health : "+_currentHealth);

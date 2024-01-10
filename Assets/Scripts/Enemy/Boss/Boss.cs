@@ -16,6 +16,7 @@ public class Boss : MonoBehaviour
     private BossState _bossStateChecker;
     private NavMeshAgent _agent;
     private Animator _anim;
+    private BossAnimationController animationController;
 
     private bool _finishedAttacking = true;
     private float _currentAttackTime;
@@ -28,6 +29,7 @@ public class Boss : MonoBehaviour
         _bossStateChecker = GetComponent<BossState>();
         _agent = GetComponent<NavMeshAgent>();
         _anim = GetComponent<Animator>();
+        animationController = GetComponent<BossAnimationController>();
         allWayPoints.AddRange(GameObject.FindGameObjectsWithTag("WayPoints"));
         bossDeath = false;
     }
@@ -39,8 +41,8 @@ public class Boss : MonoBehaviour
 
         else
         {
-            _anim.SetInteger("Attack", 0);
-            if(!_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            animationController.ResetBossAttackAnimation();
+            if(animationController.IsBossInIdleAnimation())
             {
                 _finishedAttacking = true;
             }
@@ -51,7 +53,7 @@ public class Boss : MonoBehaviour
         if(_bossStateChecker.CurrentBossState == BossStates.Death)
         {
             _agent.isStopped = true;
-            _anim.SetBool("Death", true);
+            animationController.PlayDeathAnimation();
             _targetCollider.enabled = false;
             bossDeath = true;
         }
@@ -61,19 +63,19 @@ public class Boss : MonoBehaviour
             {
 
                 _agent.isStopped = false;
-                _anim.SetBool("Run", true);
-                _anim.SetBool("Walk", false);
-                _anim.SetBool("WakeUp", true);
+                animationController.PlayRunAnimation();
+                animationController.StopWalkAnimation();
+                animationController.PlayWakeUpAnimation();
                 _agent.speed = 3f;
                 _agent.SetDestination(_playerTransform.position);
             }
             else if(_bossStateChecker.CurrentBossState == BossStates.Patrol)
             {
                 _agent.isStopped = false;
-                _anim.ResetTrigger("Shoot");
-                _anim.SetBool("Run", false);
-                _anim.SetBool("Walk", true);
-                _anim.SetBool("WakeUp", true);
+                animationController.ResetShootAnimation();
+                animationController.StopRunAnimation();
+                animationController.PlayRunAnimation();
+                animationController.PlayWakeUpAnimation();
                 if (_agent.remainingDistance < 4f || !_agent.hasPath)
                 {
                     _agent.speed = 2f;
@@ -82,15 +84,17 @@ public class Boss : MonoBehaviour
             }
             else if(_bossStateChecker.CurrentBossState == BossStates.Shoot)
             {
-                _anim.SetBool("Run", false);
-                _anim.SetBool("WakeUp", true);
-                _anim.SetBool("Walk", false);
+                animationController.StopRunAnimation();
+                animationController.PlayWakeUpAnimation();
+                animationController.StopWalkAnimation();
                 LookPlayer();
                 if(_currentAttackTime >= attackRate)
                 {
-                    _anim.SetTrigger("Shoot");
-                    //Instantiate(fireBall, firePosition.position, Quaternion.identity);
+                    animationController.PlayShootFireBallAnimation();
+                    GameObject _fireball = Instantiate(fireBall, firePosition.position, Quaternion.identity);
+                    _fireball.GetComponent<Spell>()?.Init(transform.forward);
                     _currentAttackTime = 0;
+                    _agent.isStopped = true;
                     _finishedAttacking = false;
                 }
                 else
@@ -100,31 +104,31 @@ public class Boss : MonoBehaviour
             }
             else if(_bossStateChecker.CurrentBossState == BossStates.Attack)
             {
-                _anim.SetBool("Run", false);
-                _anim.SetBool("WakeUp", true);
-                _anim.SetBool("Walk", false);
-                _agent.isStopped = true;
+                animationController.StopRunAnimation();
+                animationController.PlayWakeUpAnimation();
+                animationController.StopWalkAnimation();
                 LookPlayer();
 
                 if(_currentAttackTime >= attackRate)
                 {
                     int attackAnimIndex = Random.Range(1, 3);
-                    _anim.SetInteger("Attack", attackAnimIndex);
+                    animationController.PlayBossAttackAnimation(attackAnimIndex);
 
                     _currentAttackTime = 0f;
                     _finishedAttacking = false;
+                    _agent.isStopped = true;
                 }
                 else
                 {
                     _currentAttackTime += Time.deltaTime;
-                    _anim.SetInteger("Attack", 0);
+                    animationController.ResetBossAttackAnimation();
                 }
             }
             else
             {
-                _anim.SetBool("WakeUp", false);
-                _anim.SetBool("Walk", false);
-                _anim.SetBool("Run", false);
+                animationController.StopWakeUpAnimation();
+                animationController.StopWalkAnimation();
+                animationController.StopRunAnimation();
                 _agent.isStopped = true;
             }
         }

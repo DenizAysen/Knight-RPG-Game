@@ -97,6 +97,9 @@ public class PlayerOnClick : MonoBehaviour
                     _enemy = hit.collider.gameObject.transform.parent.gameObject;
                     _canMove = true;
                     _canAttackMove = true;
+                    _targetAttackPoint = _enemy.gameObject.transform.position;
+
+                    _newAttackPoint = new Vector3(_targetAttackPoint.x, transform.position.y, _targetAttackPoint.z);
                 }
   
             }
@@ -129,12 +132,14 @@ public class PlayerOnClick : MonoBehaviour
             }
             else if (_canAttackMove)
             {
-                if(Vector3.Distance(transform.position, _newAttackPoint) <= attackRange)
+                Debug.Log(_newAttackPoint);
+                if (Vector3.Distance(transform.position, _newAttackPoint) <= attackRange)
                 {
                     _moveVector = Vector3.zero;
                     _animationController.StopRunAnimation();
                     _targetAttackPoint = Vector3.zero;
                     _animationController.PlayBasicAttackAnimation();
+
                     _canAttackMove = false;
                     _canMove = false;
                 }
