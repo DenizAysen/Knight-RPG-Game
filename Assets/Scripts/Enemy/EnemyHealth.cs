@@ -44,4 +44,6 @@ public class EnemyHealth : MonoBehaviour
         Debug.Log("Enemy health : "+_currentHealth);
     }
     public bool IsEnemyAlive() => _currentHealth > 0f;
+    public float GetCurrentHealth() => _currentHealth;
+    public float GetMaxHealth() => maxHealth;
 }
