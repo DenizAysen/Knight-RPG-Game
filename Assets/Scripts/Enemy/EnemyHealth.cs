@@ -41,7 +41,6 @@ public class EnemyHealth : MonoBehaviour
             if(gameObject.tag == _boss)
             {
                 AudioManager.Instance.PlaySFX(6);
-                Debug.Log("Boss Hasar yedi");
             }
 
             else if(gameObject.tag == _enemy)
@@ -57,7 +56,6 @@ public class EnemyHealth : MonoBehaviour
 
             targetCollider?.gameObject.SetActive(false);
         }
-        Debug.Log("Enemy health : "+_currentHealth);
     }
     private void Init()
     {

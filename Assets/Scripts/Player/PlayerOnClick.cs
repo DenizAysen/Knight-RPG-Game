@@ -141,7 +141,7 @@ public class PlayerOnClick : MonoBehaviour
                     _animationController.StopRunAnimation();
                     _targetAttackPoint = Vector3.zero;
                     _animationController.PlayBasicAttackAnimation();
-
+                    StopCamera();
                     _canAttackMove = false;
                     _canMove = false;
                 }

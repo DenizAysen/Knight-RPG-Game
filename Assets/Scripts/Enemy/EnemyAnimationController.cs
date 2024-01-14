@@ -47,6 +47,10 @@ public class EnemyAnimationController : MonoBehaviour
     public bool DeathAnimationCompleted() => !_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Death") && 
         _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > .95f;
     #endregion
+    #region Animation Events
+    public void PlayAttackSFX() => AudioManager.Instance.PlaySFX(2);
+    public void PlaySkeletonDeathSFX() => AudioManager.Instance.PlaySFX(5); 
+    #endregion
     //public bool AnimatorIsInTransition() => _anim.IsInTransition(0);
     //public bool AnimatorIsInDeathState() => _anim.GetCurrentAnimatorStateInfo(0).IsName("Death");
     //public bool IsAnimatorCurrentStateCompleted() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime > .95f;

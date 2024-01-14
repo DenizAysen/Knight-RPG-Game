@@ -10,7 +10,11 @@ public class PlayerAnimationController : MonoBehaviour
     private float _animationExitTime;
     #endregion
     #region SerializedFields
-    [SerializeField] private GameObject levelUpVFX; 
+    [SerializeField] private GameObject levelUpVFX;
+    [SerializeField] private GameObject dustParticle;
+    #endregion
+    #region Actions
+    public static Action<GameObject> OnHitDustInit; 
     #endregion
     #region Unity Methods
     private void Awake()
@@ -25,6 +29,7 @@ public class PlayerAnimationController : MonoBehaviour
     private void SubscribeEvents()
     {
         LevelManager.Instance.OnLevelUp += OnLevelUpAnim;
+        OnHitDustInit += CreateHitDust;
     }
     private void OnDisable()
     {
@@ -34,6 +39,7 @@ public class PlayerAnimationController : MonoBehaviour
     private void UnSubscribeEvents()
     {
         LevelManager.Instance.OnLevelUp -= OnLevelUpAnim;
+        OnHitDustInit -= CreateHitDust;
     }
     #endregion
     #region Skill Animation Methods
@@ -43,6 +49,11 @@ public class PlayerAnimationController : MonoBehaviour
     #region Basic Attack Animation Methods
     public void PlayBasicAttackAnimation() => _anim.SetTrigger("AttackMove");
     public bool IsPlayingBasicAttackAnimation() => !_anim.IsInTransition(0) && _anim.GetCurrentAnimatorStateInfo(0).IsName("Basic Attack");
+    private void CreateHitDust(GameObject hit)
+    {
+        Vector3 initPos = new Vector3(hit.transform.position.x, hit.transform.position.y + 1.25f, hit.transform.position.z);
+        Instantiate(dustParticle, initPos, Quaternion.identity);
+    }
     #endregion
     #region Run Animation Methods
     public void PlayRunAnimation() => _anim.SetFloat("Speed", 1f);

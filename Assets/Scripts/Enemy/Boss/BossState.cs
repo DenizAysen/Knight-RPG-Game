@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,26 @@ public class BossState : MonoBehaviour
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         _bossState = BossStates.Sleep;
     }
+    private void Start()
+    {        
+        SubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
+        SceneManagement.OnAllSkeletonsDied += OnAllSkeletonsDied;
+    }
+
+    private void OnDisable()
+    {
+        UnSubscribeEvents();        
+    }
+
+    private void UnSubscribeEvents()
+    {
+        SceneManagement.OnAllSkeletonsDied -= OnAllSkeletonsDied;
+    }
+
     private void Update()
     {
         SetBossState();
@@ -29,7 +50,7 @@ public class BossState : MonoBehaviour
 
         if(_bossState == BossStates.Sleep)
         {
-            int enemyCount = FindObjectsOfType<EnemyWaypointTracker>().Length;
+            //int enemyCount = FindObjectsOfType<EnemyWaypointTracker>().Length;
             if(_enemyHealth.GetCurrentHealth() < _enemyHealth.GetMaxHealth())
             {
                 _bossState = BossStates.None;
@@ -38,10 +59,10 @@ public class BossState : MonoBehaviour
             {
                 _bossState = BossStates.None;
             }
-            else if(enemyCount == 0)
-            {
-                _bossState = BossStates.None;
-            }
+            //else if(enemyCount == 0)
+            //{
+            //    _bossState = BossStates.None;
+            //}
             else
             {
                 _bossState = BossStates.Sleep;
@@ -75,6 +96,7 @@ public class BossState : MonoBehaviour
             _bossState = BossStates.Death;
         }
     }
+    private void OnAllSkeletonsDied() => _bossState = BossStates.None;
     public BossStates CurrentBossState { get {return _bossState; } set { _bossState = value; } } 
 
 }

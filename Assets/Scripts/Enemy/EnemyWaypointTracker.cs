@@ -50,7 +50,11 @@ public class EnemyWaypointTracker : MonoBehaviour
             animationController.PlayDeathAnimation();
             _agent.enabled = false;
             if (animationController.DeathAnimationCompleted())
+            {
+                SceneManagement.OnSkeletonDied?.Invoke(gameObject);
                 Destroy(gameObject, 5f);
+            }
+
         }
     }
     private void MoveAndAttack()
@@ -121,8 +125,6 @@ public class EnemyWaypointTracker : MonoBehaviour
             _currentAttackTime += Time.deltaTime;
         }
     }
-    public void PlayAttackSFX() => AudioManager.Instance.PlaySFX(2);
-    public void PlaySkeletonDeathSFX() => AudioManager.Instance.PlaySFX(5);
     private void Patrol()
     {
         _waypointIndex = _waypointIndex == wayPoints.Length - 1 ? 0 : _waypointIndex + 1; 
