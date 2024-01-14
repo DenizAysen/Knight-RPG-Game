@@ -77,4 +77,5 @@ public class BossAnimationController : EnemyAnimationController
     } 
     #endregion
     public bool IsBossInIdleAnimation() => !_animator.IsInTransition(0) && _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle");
+    public bool IsBossInScreamAnimation() => !_animator.IsInTransition(0) && _animator.GetCurrentAnimatorStateInfo(0).IsName("Scream");
 }

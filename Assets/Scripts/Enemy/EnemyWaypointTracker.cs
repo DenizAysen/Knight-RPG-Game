@@ -113,7 +113,7 @@ public class EnemyWaypointTracker : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition - transform.position), rotateSpeed * Time.deltaTime);
         if (_currentAttackTime >= attackRate)
         {
-            animationController.PlayAttackAnimation();
+            animationController.PlayAttackAnimation();           
             _currentAttackTime = 0;
         }
         else
@@ -121,6 +121,8 @@ public class EnemyWaypointTracker : MonoBehaviour
             _currentAttackTime += Time.deltaTime;
         }
     }
+    public void PlayAttackSFX() => AudioManager.Instance.PlaySFX(2);
+    public void PlaySkeletonDeathSFX() => AudioManager.Instance.PlaySFX(5);
     private void Patrol()
     {
         _waypointIndex = _waypointIndex == wayPoints.Length - 1 ? 0 : _waypointIndex + 1; 

@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class PlayerOnClick : MonoBehaviour
     [SerializeField] private float attackRange = 2f;
 
     [SerializeField] private LayerMask groundlayer;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     #endregion
 
     #region Privates
@@ -90,6 +92,7 @@ public class PlayerOnClick : MonoBehaviour
                         _canMove = true;
                         _canAttackMove = false;
                         _targetMovePoint = hit.point;
+                        MoveCamera();
                     }
                 }
                 else if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Target"))
@@ -132,7 +135,6 @@ public class PlayerOnClick : MonoBehaviour
             }
             else if (_canAttackMove)
             {
-                Debug.Log(_newAttackPoint);
                 if (Vector3.Distance(transform.position, _newAttackPoint) <= attackRange)
                 {
                     _moveVector = Vector3.zero;
@@ -182,7 +184,8 @@ public class PlayerOnClick : MonoBehaviour
         }
     }
     #endregion
-
+    public void StopCamera() => virtualCamera.m_Follow = null;
+    public void MoveCamera() => virtualCamera.m_Follow = transform;
     #region Properties
     public bool FinishedMovement
     {

@@ -15,15 +15,16 @@ public class EnemyHealth : MonoBehaviour
 
     #region Privates
     private float _currentHealth;
+    private const string _boss = "Boss";
+    private const string _enemy = "Enemy";
+
     private EnemyAnimationController animationController;
     #endregion
     public static Action<int> OnDeath;
     private void Awake()
     {
-        _currentHealth = maxHealth;
-        Debug.Log(gameObject.name + " health : " + _currentHealth);
         animationController = GetComponent<EnemyAnimationController>();
-        Debug.Log(animationController.gameObject.name);
+        Init();
     }
     public void TakeDamage(float damageAmount)
     {
@@ -34,7 +35,18 @@ public class EnemyHealth : MonoBehaviour
         healthBar.fillAmount = _currentHealth / maxHealth;
 
         if (_currentHealth > 0)
+        {
             animationController?.PlayHitAnimation();
+
+            if(gameObject.tag == _boss)
+            {
+                AudioManager.Instance.PlaySFX(6);
+                Debug.Log("Boss Hasar yedi");
+            }
+
+            else if(gameObject.tag == _enemy)
+                AudioManager.Instance.PlaySFX(3);
+        }
 
         else
         {
@@ -46,6 +58,15 @@ public class EnemyHealth : MonoBehaviour
             targetCollider?.gameObject.SetActive(false);
         }
         Debug.Log("Enemy health : "+_currentHealth);
+    }
+    private void Init()
+    {
+        if (gameObject.tag == _boss)
+            maxHealth = UnityEngine.Random.Range(150, 200);
+        else if (gameObject.tag == _enemy)
+            maxHealth = UnityEngine.Random.Range(30, 50);
+
+        _currentHealth = maxHealth;
     }
     public bool IsEnemyAlive() => _currentHealth > 0f;
     public float GetCurrentHealth() => _currentHealth;

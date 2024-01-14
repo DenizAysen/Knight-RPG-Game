@@ -72,11 +72,10 @@ public class BossState : MonoBehaviour
         }
         if(_enemyHealth.GetCurrentHealth() <= 0f)
         {
-            Debug.Log(_enemyHealth.GetCurrentHealth());
             _bossState = BossStates.Death;
         }
     }
-    public BossStates CurrentBossState { get {return _bossState; } } 
+    public BossStates CurrentBossState { get {return _bossState; } set { _bossState = value; } } 
 
 }
 public enum BossStates

@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 1141598097719533653}
   - component: {fileID: 6603617466863670866}
   - component: {fileID: 6238352429795677969}
+  - component: {fileID: 4445584517592404}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -355,9 +356,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxMoveSpeed: 4
   rotateSpeed: 15
+  attackRange: 2
   groundlayer:
     serializedVersion: 2
     m_Bits: 256
+  virtualCamera: {fileID: 0}
 --- !u!114 &8097048791762725537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +373,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55ea17c625597e74f998fdd305498fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cursorTexture: {fileID: 2800000, guid: 50812e7facb69b74c985b7084d23d906, type: 3}
+  cursorTextureNormal: {fileID: 2800000, guid: 85f5b5a6480aed942a2b412c4120c3c3, type: 3}
+  cursorTextureEnemy: {fileID: 2800000, guid: 8b1730b6d9dd2694092796fd8de1368d, type: 3}
   mousePoint: {fileID: 472570122590715910, guid: 641eb971d21db214b955beae6897d068,
     type: 3}
 --- !u!114 &4445584517592399
@@ -413,7 +417,7 @@ MonoBehaviour:
   - 0.05
   - 0.05
   - 0.11
-  virtualCamera: {fileID: 0}
+  requiredLevelList: 020000000300000004000000050000000600000007000000
 --- !u!114 &4445584517592400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +495,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthBar: {fileID: 0}
+--- !u!114 &4445584517592404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139757629358677577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5cc0cd4e4eafd745966fc89d5f277f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelUpVFX: {fileID: 3107911855632031952, guid: 3fff8d070a6cf8f47a8a0d5f54a59ad7,
+    type: 3}
 --- !u!1 &1139764987980396959
 GameObject:
   m_ObjectHideFlags: 0
@@ -3450,6 +3468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Maul
       objectReference: {fileID: 0}
+    - target: {fileID: 1907570128430670, guid: e2ee674be93e4be46a07b380f4c31cc1, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 4523887289566154, guid: e2ee674be93e4be46a07b380f4c31cc1, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -3507,3 +3529,35 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1141598098116592057}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1139696060086872055 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1907570128430670, guid: e2ee674be93e4be46a07b380f4c31cc1,
+    type: 3}
+  m_PrefabInstance: {fileID: 1141598098116592057}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &761208192
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139696060086872055}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.07732172, y: 1.0176187, z: 0.31122977}
+  m_Center: {x: -0.0000001208375, y: 0.30210572, z: -0.021909483}
+--- !u!114 &761208193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139696060086872055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d5a11fc36baca14e8689531d3f3525e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackDamage: 10

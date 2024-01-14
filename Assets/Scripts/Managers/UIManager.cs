@@ -36,11 +36,6 @@ public class UIManager : MonoBehaviour
         OnExpGained -= UpdateExpBar;
         OnLevelGained -= UpdateLevelText;
     }
-    void Start()
-    {
-        
-    }
-
     private void UpdateExpBar(float XP)
     {
         expBar.fillAmount = XP;

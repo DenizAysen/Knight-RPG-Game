@@ -5,13 +5,16 @@ using UnityEngine.AI;
 
 public class Boss : MonoBehaviour
 {
+    #region Serialized Fields
     [SerializeField] private float rotateSpeed;
     [SerializeField] private float attackRate;
 
     [SerializeField] private SphereCollider _targetCollider;
     [SerializeField] private GameObject fireBall;
-    [SerializeField] private Transform firePosition;
+    [SerializeField] private Transform firePosition; 
+    #endregion
 
+    #region Privates
     private Transform _playerTransform;
     private BossState _bossStateChecker;
     private NavMeshAgent _agent;
@@ -20,9 +23,11 @@ public class Boss : MonoBehaviour
 
     private bool _finishedAttacking = true;
     private float _currentAttackTime;
-    private List<GameObject> allWayPoints = new List<GameObject>();
+    private List<GameObject> allWayPoints = new List<GameObject>(); 
+    #endregion
 
     public static bool bossDeath = false;
+    #region Unity Methods
     private void Awake()
     {
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
@@ -36,30 +41,41 @@ public class Boss : MonoBehaviour
 
     void Update()
     {
-        if(_finishedAttacking)
+        if (animationController.IsBossInScreamAnimation())
+        {
+            if (!AudioManager.Instance.IsSFXPlaying(10))
+            {
+                AudioManager.Instance.PlaySFX(10);
+            }
+        }
+
+        if (_finishedAttacking)
             GetControl();
 
         else
         {
             animationController.ResetBossAttackAnimation();
-            if(animationController.IsBossInIdleAnimation())
+            if (animationController.IsBossInIdleAnimation())
             {
                 _finishedAttacking = true;
             }
         }
     }
+    #endregion
+    #region Boss State Control
     private void GetControl()
     {
-        if(_bossStateChecker.CurrentBossState == BossStates.Death)
+        if (_bossStateChecker.CurrentBossState == BossStates.Death)
         {
             _agent.isStopped = true;
             animationController.PlayDeathAnimation();
             _targetCollider.enabled = false;
             bossDeath = true;
+            AudioManager.Instance.PlaySFX(7);
         }
         else
         {
-            if(_bossStateChecker.CurrentBossState == BossStates.Chase)
+            if (_bossStateChecker.CurrentBossState == BossStates.Chase)
             {
 
                 _agent.isStopped = false;
@@ -69,7 +85,7 @@ public class Boss : MonoBehaviour
                 _agent.speed = 3f;
                 _agent.SetDestination(_playerTransform.position);
             }
-            else if(_bossStateChecker.CurrentBossState == BossStates.Patrol)
+            else if (_bossStateChecker.CurrentBossState == BossStates.Patrol)
             {
                 _agent.isStopped = false;
                 animationController.ResetShootAnimation();
@@ -82,19 +98,17 @@ public class Boss : MonoBehaviour
                     PickRandomLocation();
                 }
             }
-            else if(_bossStateChecker.CurrentBossState == BossStates.Shoot)
+            else if (_bossStateChecker.CurrentBossState == BossStates.Shoot)
             {
+                _agent.isStopped = true;
                 animationController.StopRunAnimation();
                 animationController.PlayWakeUpAnimation();
                 animationController.StopWalkAnimation();
                 LookPlayer();
-                if(_currentAttackTime >= attackRate)
+                if (_currentAttackTime >= attackRate)
                 {
                     animationController.PlayShootFireBallAnimation();
-                    GameObject _fireball = Instantiate(fireBall, firePosition.position, Quaternion.identity);
-                    _fireball.GetComponent<Spell>()?.Init(transform.forward);
                     _currentAttackTime = 0;
-                    _agent.isStopped = true;
                     _finishedAttacking = false;
                 }
                 else
@@ -102,14 +116,14 @@ public class Boss : MonoBehaviour
                     _currentAttackTime += Time.deltaTime;
                 }
             }
-            else if(_bossStateChecker.CurrentBossState == BossStates.Attack)
+            else if (_bossStateChecker.CurrentBossState == BossStates.Attack)
             {
                 animationController.StopRunAnimation();
                 animationController.PlayWakeUpAnimation();
                 animationController.StopWalkAnimation();
                 LookPlayer();
 
-                if(_currentAttackTime >= attackRate)
+                if (_currentAttackTime >= attackRate)
                 {
                     int attackAnimIndex = Random.Range(1, 3);
                     animationController.PlayBossAttackAnimation(attackAnimIndex);
@@ -132,7 +146,18 @@ public class Boss : MonoBehaviour
                 _agent.isStopped = true;
             }
         }
+    } 
+    #endregion
+    void LookPlayer()
+    {
+        
+        Vector3 targetPos = new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z);
+        Vector3 moveDir = (targetPos - transform.position).normalized;
+
+        transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
+        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPos - transform.position), rotateSpeed * 2 * Time.deltaTime);
     }
+    #region Boss Patrol
     private void PickRandomLocation()
     {
         GameObject pos = GetRandomPoint();
@@ -142,12 +167,15 @@ public class Boss : MonoBehaviour
     {
         int index = Random.Range(0, allWayPoints.Count);
         return allWayPoints[index];
-    }
-    void LookPlayer()
+    } 
+    #endregion
+    #region Animation Events
+    public void ShootFireball()
     {
-        Vector3 targetPos = new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z);
-        Vector3 moveDir = (targetPos - transform.position).normalized;
-
-        transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed * Time.deltaTime);
+        AudioManager.Instance.PlaySFX(0);
+        GameObject _fireball = Instantiate(fireBall, firePosition.position, Quaternion.identity);
+        _fireball.GetComponent<Spell>()?.Init(transform.forward);
     }
+    public void PlayBossAttackSFX() => AudioManager.Instance.PlaySFX(9); 
+    #endregion
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 452434020}
   - component: {fileID: 452434019}
   - component: {fileID: 452434018}
+  - component: {fileID: 452434021}
   m_Layer: 9
   m_Name: HealthUI
   m_TagString: Untagged
@@ -102,6 +103,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &452434021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452434016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7976c7048f9553c4baf6d2cff51927a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &948367174
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,6 +191,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1144361000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1144361001}
+  - component: {fileID: 1144361002}
+  m_Layer: 12
+  m_Name: TargetHelper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1144361001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144361000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4965688928735153973}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1144361002
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144361000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 3.589967
+  m_Center: {x: 0, y: 3.089967, z: 0}
 --- !u!1 &1369172749
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +309,7 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!1 &4970449168107919001
@@ -923,7 +981,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4191b0de366a0a1478b9496a0d39bbcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 5
+  attackDamage: 4
 --- !u!114 &4970041143298943217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1781,7 +1839,7 @@ GameObject:
   - component: {fileID: 802821259}
   m_Layer: 9
   m_Name: SKELETON
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1801,6 +1859,7 @@ Transform:
   - {fileID: 4965287340721459637}
   - {fileID: 4969517744729622727}
   - {fileID: 452434017}
+  - {fileID: 1144361001}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1838,7 +1897,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 96
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &95690985114828224
 CapsuleCollider:
@@ -1896,7 +1955,7 @@ MonoBehaviour:
   rotateSpeed: 5
   patrolTime: 10
   walkDistance: 8
-  attackDistance: 1.4
+  attackDistance: 2
   attackRate: 1
 --- !u!114 &95690985114828228
 MonoBehaviour:
@@ -1910,8 +1969,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f448944e35e30b4d849ba78592f518c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 90
+  maxHealth: 20
   healthBar: {fileID: 1369172751}
+  targetCollider: {fileID: 1144361002}
+  expAmount: 25
 --- !u!114 &802821259
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -49,13 +49,13 @@ public class LevelManager : MonoBehaviour
     {
         EnemyHealth.OnDeath += AddExp;
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            AddExp(50);
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Z))
+    //    {
+    //        AddExp(50);
+    //    }
+    //}
     public void AddExp(int amount)
     {
         _currentExp += amount;

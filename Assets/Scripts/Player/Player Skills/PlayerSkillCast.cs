@@ -20,7 +20,6 @@ public class PlayerSkillCast : MonoBehaviour
     [Header("Required Level")]
     [SerializeField] private List<int> requiredLevelList;
 
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
     #endregion
     #region Privates
     private bool _faded;
@@ -65,8 +64,6 @@ public class PlayerSkillCast : MonoBehaviour
         if(!_animationController.IsAnimatorInTransition() && _animationController.IsPlayingIdleAnimation())
         {
             _canAttack = true;
-            //if (virtualCamera.m_Follow != transform)
-            //    virtualCamera.m_Follow = transform;
         }
         else
         {
@@ -249,7 +246,7 @@ public class PlayerSkillCast : MonoBehaviour
     private void TurnThePlayer()
     {
         Vector3 targetPos = Vector3.zero;
-        //virtualCamera.m_Follow = null;
+        _playerOnClick.StopCamera();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 

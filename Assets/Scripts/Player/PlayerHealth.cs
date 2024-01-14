@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,31 @@ public class PlayerHealth : MonoBehaviour
     {
         _currentHealth = maxHealth;
         _anim = GetComponent<Animator>();
+    }
+    private void Start()
+    {
+        SubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
+        LevelManager.Instance.OnLevelUp += OnLevelUp;
+    }
+
+    private void OnLevelUp()
+    {
+        _currentHealth = _currentHealth == 100f ? _currentHealth : maxHealth;
+
+        UpdateHealthImage();
+    }
+    private void OnDisable()
+    {
+        UnSubscribeEvents();
+    }
+
+    private void UnSubscribeEvents()
+    {
+        LevelManager.Instance.OnLevelUp -= OnLevelUp;
     }
     #endregion
     #region Methods
