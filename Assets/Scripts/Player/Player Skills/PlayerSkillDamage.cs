@@ -51,7 +51,6 @@ public class PlayerSkillDamage : MonoBehaviour
                 else if (enemyLayer == (1 << LayerMask.NameToLayer(_player)))
                 {
                     _playerHealth?.TakeDamage(damageAmount);
-                    Debug.Log("oyuncuya dokundu");
                     enabled = false;
                 }
 

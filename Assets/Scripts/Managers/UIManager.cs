@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour
     #region Serialized Fields
     [SerializeField] private Image expBar;
     [SerializeField] private Text levelText;
+
+    [SerializeField] private GameObject bossHealthBar;
     #endregion
     public Action<float> OnExpGained;
     public Action<int> OnLevelGained;
@@ -30,11 +32,15 @@ public class UIManager : MonoBehaviour
     {
         OnExpGained += UpdateExpBar;
         OnLevelGained += UpdateLevelText;
+        LevelManager.OnAllSkeletonsDied += ShowBossUI;
+        LevelManager.OnBossDeath += HideBossUI;
     }
     private void OnDisable()
     {
         OnExpGained -= UpdateExpBar;
         OnLevelGained -= UpdateLevelText;
+        LevelManager.OnAllSkeletonsDied -= ShowBossUI;
+        LevelManager.OnBossDeath -= HideBossUI;
     }
     private void UpdateExpBar(float XP)
     {
@@ -43,5 +49,13 @@ public class UIManager : MonoBehaviour
     private void UpdateLevelText(int level)
     {
         levelText.text = level.ToString();
+    }
+    private void ShowBossUI()
+    {
+        bossHealthBar.SetActive(true);
+    }
+    private void HideBossUI()
+    {
+        bossHealthBar.SetActive(false);
     }
 }

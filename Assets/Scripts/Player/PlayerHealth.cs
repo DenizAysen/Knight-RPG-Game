@@ -12,8 +12,6 @@ public class PlayerHealth : MonoBehaviour
     #endregion
 
     #region Privates
-    private Animator _anim;
-
     private float _currentHealth;
     private bool _isShielded;
     #endregion
@@ -21,7 +19,6 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         _currentHealth = maxHealth;
-        _anim = GetComponent<Animator>();
     }
     private void Start()
     {
@@ -30,7 +27,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        LevelManager.Instance.OnLevelUp += OnLevelUp;
+        XPManager.Instance.OnLevelUp += OnLevelUp;
     }
 
     private void OnLevelUp()
@@ -46,7 +43,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void UnSubscribeEvents()
     {
-        LevelManager.Instance.OnLevelUp -= OnLevelUp;
+        XPManager.Instance.OnLevelUp -= OnLevelUp;
     }
     #endregion
     #region Methods
@@ -60,7 +57,9 @@ public class PlayerHealth : MonoBehaviour
         UpdateHealthImage();
 
         if (_currentHealth <= 0f)
-            Death();
+        {
+            LevelManager.OnPlayerDeath?.Invoke();
+        }
     }
     public bool IsPlayerDead()
     {
@@ -72,16 +71,11 @@ public class PlayerHealth : MonoBehaviour
         _currentHealth = _currentHealth > 100f ? maxHealth : _currentHealth;
 
         UpdateHealthImage();
-        Debug.Log(_currentHealth);
     }
     private void UpdateHealthImage() => healthBar.fillAmount = (_currentHealth / maxHealth);
-    private void Death() => _anim.SetBool("Death", true); 
     #endregion
     #region Properties
     public bool IsShielded { get { return _isShielded; } set { _isShielded = value; } } 
     #endregion
-    //public bool IsShielded()
-    //{
-    //    return _isShielded;
-    //}
+    
 }

@@ -51,7 +51,7 @@ public class EnemyWaypointTracker : MonoBehaviour
             _agent.enabled = false;
             if (animationController.DeathAnimationCompleted())
             {
-                SceneManagement.OnSkeletonDied?.Invoke(gameObject);
+                LevelManager.OnSkeletonDied?.Invoke(gameObject);
                 Destroy(gameObject, 5f);
             }
 

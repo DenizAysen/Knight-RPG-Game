@@ -28,17 +28,18 @@ public class PlayerAnimationController : MonoBehaviour
     }
     private void SubscribeEvents()
     {
-        LevelManager.Instance.OnLevelUp += OnLevelUpAnim;
+        XPManager.Instance.OnLevelUp += OnLevelUpAnim;
+        LevelManager.OnPlayerDeath += PlayDeathAnimation;
         OnHitDustInit += CreateHitDust;
     }
     private void OnDisable()
     {
         UnSubscribeEvents();
-
     }
     private void UnSubscribeEvents()
     {
-        LevelManager.Instance.OnLevelUp -= OnLevelUpAnim;
+        XPManager.Instance.OnLevelUp -= OnLevelUpAnim;
+        LevelManager.OnPlayerDeath += PlayDeathAnimation;
         OnHitDustInit -= CreateHitDust;
     }
     #endregion
@@ -71,6 +72,9 @@ public class PlayerAnimationController : MonoBehaviour
         GameObject levelUpEffect = Instantiate(levelUpVFX, transform.position, Quaternion.identity);
         levelUpEffect.transform.SetParent(transform);
         Destroy(levelUpEffect, 3.5f);
-    } 
+    }
+    #endregion
+    #region Death Animation
+    private void PlayDeathAnimation() => _anim.SetBool("Death", true); 
     #endregion
 }

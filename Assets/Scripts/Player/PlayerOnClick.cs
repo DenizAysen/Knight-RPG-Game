@@ -101,7 +101,7 @@ public class PlayerOnClick : MonoBehaviour
                     _canMove = true;
                     _canAttackMove = true;
                     _targetAttackPoint = _enemy.gameObject.transform.position;
-
+                    MoveCamera();
                     _newAttackPoint = new Vector3(_targetAttackPoint.x, transform.position.y, _targetAttackPoint.z);
                 }
   
@@ -141,7 +141,7 @@ public class PlayerOnClick : MonoBehaviour
                     _animationController.StopRunAnimation();
                     _targetAttackPoint = Vector3.zero;
                     _animationController.PlayBasicAttackAnimation();
-                    StopCamera();
+                    //StopCamera();
                     _canAttackMove = false;
                     _canMove = false;
                 }

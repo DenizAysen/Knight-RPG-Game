@@ -53,6 +53,8 @@ public class EnemyHealth : MonoBehaviour
             OnDeath?.Invoke(expAmount);
             if(canvas != null && canvas.renderMode == RenderMode.WorldSpace)
                 canvas.gameObject.SetActive(false);
+            if (gameObject.tag == _boss)
+                LevelManager.OnBossDeath?.Invoke();
 
             targetCollider?.gameObject.SetActive(false);
         }

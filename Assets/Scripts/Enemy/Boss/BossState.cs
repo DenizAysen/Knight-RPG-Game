@@ -10,6 +10,7 @@ public class BossState : MonoBehaviour
     private Transform _playerTransform;
     private BossStates _bossState = BossStates.Sleep;
     private float _distanceToTarget;
+    private bool _bossIsDead;
     private EnemyHealth _enemyHealth;
     #endregion
     #region Unity Methods
@@ -18,6 +19,7 @@ public class BossState : MonoBehaviour
         _enemyHealth = GetComponent<EnemyHealth>();
         _playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         _bossState = BossStates.Sleep;
+        _bossIsDead = false;
     }
     private void Start()
     {        
@@ -26,9 +28,9 @@ public class BossState : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        SceneManagement.OnAllSkeletonsDied += OnAllSkeletonsDied;
+        LevelManager.OnAllSkeletonsDied += OnAllSkeletonsDied;
+        LevelManager.OnBossDeath += OnBossDeath;
     }
-
     private void OnDisable()
     {
         UnSubscribeEvents();        
@@ -36,7 +38,8 @@ public class BossState : MonoBehaviour
 
     private void UnSubscribeEvents()
     {
-        SceneManagement.OnAllSkeletonsDied -= OnAllSkeletonsDied;
+        LevelManager.OnAllSkeletonsDied -= OnAllSkeletonsDied;
+        LevelManager.OnBossDeath -= OnBossDeath;
     }
 
     private void Update()
@@ -91,12 +94,14 @@ public class BossState : MonoBehaviour
                 _bossState = BossStates.None;
             }
         }
-        if(_enemyHealth.GetCurrentHealth() <= 0f)
+        if (_bossIsDead)
         {
             _bossState = BossStates.Death;
         }
     }
     private void OnAllSkeletonsDied() => _bossState = BossStates.None;
+    private void OnBossDeath() => _bossIsDead = true;
+
     public BossStates CurrentBossState { get {return _bossState; } set { _bossState = value; } } 
 
 }

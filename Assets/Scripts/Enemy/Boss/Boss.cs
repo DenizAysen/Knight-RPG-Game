@@ -36,7 +36,7 @@ public class Boss : MonoBehaviour
         _anim = GetComponent<Animator>();
         animationController = GetComponent<BossAnimationController>();
         allWayPoints.AddRange(GameObject.FindGameObjectsWithTag("WayPoints"));
-        bossDeath = false;
+        //bossDeath = false;
     }
 
     void Update()
@@ -70,7 +70,7 @@ public class Boss : MonoBehaviour
             _agent.isStopped = true;
             animationController.PlayDeathAnimation();
             _targetCollider.enabled = false;
-            bossDeath = true;
+            //bossDeath = true;
             AudioManager.Instance.PlaySFX(7);
         }
         else

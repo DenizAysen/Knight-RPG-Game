@@ -33,7 +33,7 @@ public class PlayerSkillCast : MonoBehaviour
     private PlayerManaController manaController;
     private PlayerInput playerInput;
 
-    private LevelManager _levelManager;
+    private XPManager _xpManager;
     #endregion
     private void Awake()
     {
@@ -43,7 +43,7 @@ public class PlayerSkillCast : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         manaController = GetComponent<PlayerManaController>();
         _animationController = GetComponent<PlayerAnimationController>();
-        _levelManager = FindObjectOfType<LevelManager>();
+        _xpManager = FindObjectOfType<XPManager>();
     }
     void Start()
     {
@@ -103,7 +103,7 @@ public class PlayerSkillCast : MonoBehaviour
         
         for (int i = 0; i < manaCostList.Count; i++)
         {
-            if(_levelManager.GetLevel>= requiredLevelList[i])
+            if(_xpManager.GetPlayerLevel >= requiredLevelList[i])
             {
                 if (!manaController.CanCastSkill(manaCostList[i]))
                     outOfManaIcons[i].gameObject.SetActive(true);
@@ -117,7 +117,7 @@ public class PlayerSkillCast : MonoBehaviour
     {
         for (int i = 0; i < outOfManaIcons.Length; i++)
         {
-            if (_levelManager.GetLevel < requiredLevelList[i])
+            if (_xpManager.GetPlayerLevel < requiredLevelList[i])
                 outOfManaIcons[i].gameObject.SetActive(true);
 
             else
@@ -167,7 +167,7 @@ public class PlayerSkillCast : MonoBehaviour
         }
         else
         {
-            if (manaController.CanCastSkill(manaCostList[_castedSkillIndex]) && _levelManager.GetLevel >= requiredLevelList[_castedSkillIndex])
+            if (manaController.CanCastSkill(manaCostList[_castedSkillIndex]) && _xpManager.GetPlayerLevel >= requiredLevelList[_castedSkillIndex])
             {
                 _playerOnClick.TargetPosition = transform.position;
                 if (_playerOnClick.FinishedMovement && _fadeImages[_castedSkillIndex] != 1 && _canAttack)

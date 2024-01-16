@@ -6,31 +6,26 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     #region Privates
-    private int _currentExp;
-    private int _level;
-    private int _expToNextLevel;
+    BossState _bossState;
+    private List<GameObject> enemiesOnTheScene = new List<GameObject>();
     #endregion
 
-    #region Singleton
-    public static LevelManager Instance;
+    #region SerializedFields
+    [SerializeField] private GameObject bossHealthBar;
+    #endregion
+
+    #region Actions
+    public static Action<GameObject> OnSkeletonDied;
+    public static Action OnAllSkeletonsDied;
+    public static Action OnBossDeath;
+    public static Action OnPlayerDeath;
+    #endregion
 
     private void Awake()
     {
-        _currentExp = 0;
-        _level = 0;
-        _expToNextLevel = 100;
-
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        UIManager.Instance.OnExpGained?.Invoke(0f);
-        UIManager.Instance.OnLevelGained?.Invoke(GetLevel);
+        _bossState = GameObject.FindGameObjectWithTag("Boss").GetComponent<BossState>();
     }
-    #endregion
-    public Action OnLevelUp;
+
     private void OnEnable()
     {
         SubscribeEvents();
@@ -38,7 +33,7 @@ public class LevelManager : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        EnemyHealth.OnDeath += AddExp;
+        OnSkeletonDied += OnSkeletonDeath;
     }
     private void OnDisable()
     {
@@ -47,29 +42,45 @@ public class LevelManager : MonoBehaviour
 
     private void UnSubscribeEvents()
     {
-        EnemyHealth.OnDeath += AddExp;
+        OnSkeletonDied -= OnSkeletonDeath;
     }
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Z))
-    //    {
-    //        AddExp(50);
-    //    }
-    //}
-    public void AddExp(int amount)
+    private void OnSkeletonDeath(GameObject skeleton)
     {
-        _currentExp += amount;
-        //float current = (float)_currentExp;
-        //float toNextLevel = (float)_expToNextLevel;
-        UIManager.Instance.OnExpGained?.Invoke((float) _currentExp / _expToNextLevel);
-        if(_currentExp >= _expToNextLevel)
+        if (enemiesOnTheScene.Contains(skeleton))
         {
-            _level++;
-            OnLevelUp?.Invoke();
-            UIManager.Instance.OnLevelGained?.Invoke(GetLevel);
-            _currentExp -= _expToNextLevel;
-            UIManager.Instance.OnExpGained?.Invoke(0f);
+            enemiesOnTheScene.Remove(skeleton);
+        }
+        if (enemiesOnTheScene.Count <= 0)
+        {
+            OnAllSkeletonsDied?.Invoke();
         }
     }
-    public int GetLevel { get { return _level + 1; } }
+    private void Start()
+    {
+        AudioManager.Instance.PlayGameMusic();
+        InitEnemyList();
+    }
+    private void InitEnemyList()
+    {
+        EnemyWaypointTracker[] enemyList = FindObjectsOfType<EnemyWaypointTracker>();
+        foreach (EnemyWaypointTracker enemy in enemyList)
+        {
+            enemiesOnTheScene.Add(enemy.gameObject);
+        }
+        if (enemiesOnTheScene.Count == 0)
+            OnAllSkeletonsDied?.Invoke();
+    }
+    private void Update()
+    {
+        //if (_bossState.CurrentBossState == BossStates.Sleep || _bossState.CurrentBossState == BossStates.Death)
+        //    bossHealthBar?.SetActive(false);
+
+        //else
+        //    bossHealthBar?.SetActive(true);
+
+        //if (Boss.bossDeath == true)
+        //    Invoke("RestartScene", 5f);
+        //else if (_playerHealth.IsPlayerDead())
+        //    Invoke("RestartScene", 5f);
+    }
 }
